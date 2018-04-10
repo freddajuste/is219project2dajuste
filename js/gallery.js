@@ -31,18 +31,35 @@ function animate() {
 }
 
 /************* DO NOT TOUCH CODE ABOVE THIS LINE ***************/
-
+function GalleryImage(location, description, date, img) {
+	//implement me as an object to hold the following data about an image:
+	//1. location where photo was taken
+	//2. description of photo
+	//3. the date when the photo was taken
+	//4. either a String (src URL) or an an HTMLImageObject (bitmap of the photo. https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement)
+	this.location = new location;
+	this.description = new description;
+	this.date = new date;
+	this.img = new img;
+}
 function swapPhoto() {
 	//Add code here to access the #slideShow element.
 	//Access the img element and replace its source
 	//with a new image from your images array which is loaded 
 	//from the JSON string
-	$('#slideShow').click(function(){
-		$('.img').text(galleryImage.next());
-	});
+	if (mCurrentIndex < mImages.length){
+		$('#photo').attr('src', mImages[mCurrentIndex].url);
+		$('p.location').text("Location: " + mImages[mCurrentIndex].location);
+		$('p.description').text("Description: " + mImages[mCurrentIndex].description);
+		$('p.date').text("Date: " + mImages[mCurrentIndex].date);
+		mCurrentIndex = mCurrentIndex + 1;
+	}else{
+		mCurrentIndex = 0;
+	}
+	//
 	console.log('swap photo');
+	
 }
-
 // Counter for the mImages array
 var mCurrentIndex = 0;
 
@@ -72,6 +89,14 @@ var mJson;
 // URL for the JSON to load by default
 // Some options for you are: images.json, images.short.json; you will need to create your own extra.json later
 var mUrl = 'images.json';
+var $_GET = getQueryParams(document.location.search);
+
+	if($_GET["json"] === undefined){
+		console.log("No extra Json");
+	}else{
+	
+	mUrl = $_GET["json"];
+	}
 
 
 //You can optionally use the following function as your event callback for loading the source of Images from your json data (for HTMLImageObject).
@@ -96,17 +121,7 @@ window.addEventListener('load', function() {
 
 }, false);
 
-function GalleryImage(location, description, date, img) {
-	//implement me as an object to hold the following data about an image:
-	//1. location where photo was taken
-	//2. description of photo
-	//3. the date when the photo was taken
-	//4. either a String (src URL) or an an HTMLImageObject (bitmap of the photo. https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement)
-	this.location = new location;
-	this.description = new description;
-	this.date = new date;
-	this.img = new img;
-}
+
 $('img.moreIndicator').click(function(){
 	if (this.hasClass("rot90")){
 		this.add("rot270").remove("rot90");}
