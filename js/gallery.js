@@ -84,7 +84,7 @@ mRequest.send();
 var mImages = [];
 
 // Holds the retrived JSON information
-var mJson;
+var mJson = "";
 
 // URL for the JSON to load by default
 // Some options for you are: images.json, images.short.json; you will need to create your own extra.json later
@@ -122,14 +122,61 @@ window.addEventListener('load', function() {
 }, false);
 
 
-$('img.moreIndicator').click(function(){
+$('.moreIndicator').click(function(){
 	if (this.hasClass("rot90")){
 		this.add("rot270").remove("rot90");}
 	else if (this.hasClass("rot270"){
 		this.add("rot90").remove("rot270");}
 	else{}
 	$('div.details').fadeToggle("fast", function(){
-		$('img.moreIndicator').slideUp();
+		$('.moreIndicator').slideUp();
 	});
 	
 	});
+		$('#nextPhoto').click(function(){
+		
+		mLastFrameTime = new Date().getTime();
+		mCurrentIndex = mCurrentIndex + 1;
+		//alert("testing");
+		if (mCurrentIndex < mImages.length){
+		
+		$('#photo').attr('src', mImages[mCurrentIndex].url);
+		$('p.location').text("Location: " + mImages[mCurrentIndex].location);
+		$('p.description').text("Description: " + mImages[mCurrentIndex].description);
+		$('p.date').text("Date: " + mImages[mCurrentIndex].date);
+		
+		}else{
+		mCurrentIndex = 0;
+		$('#photo').attr('src', mImages[mCurrentIndex].url);
+		$('p.location').text("Location: " + mImages[mCurrentIndex].location);
+		$('p.description').text("Description: " + mImages[mCurrentIndex].description);
+		$('p.date').text("Date: " + mImages[mCurrentIndex].date);
+		}
+		
+
+
+	});
+		$('#prevPhoto').click(function(){
+		mLastFrameTime = new Date().getTime();
+		mCurrentIndex = mCurrentIndex - 1;
+		//alert("testing");
+		if (mCurrentIndex >= 0 ){
+			;
+			$('#photo').attr('src', mImages[mCurrentIndex].url);
+			$('p.location').text("Location: " + mImages[mCurrentIndex].location);
+			$('p.description').text("Description: " + mImages[mCurrentIndex].description);
+			$('p.date').text("Date: " + mImages[mCurrentIndex].date);
+
+		
+		}else{
+			mCurrentIndex = mImages.length - 1;
+			$('#photo').attr('src', mImages[mCurrentIndex].url);
+			$('p.location').text("Location: " + mImages[mCurrentIndex].location);
+			$('p.description').text("Description: " + mImages[mCurrentIndex].description);
+			$('p.date').text("Date: " + mImages[mCurrentIndex].date);
+		}
+		
+
+	});
+	
+});
