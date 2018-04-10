@@ -31,7 +31,7 @@ function animate() {
 }
 
 /************* DO NOT TOUCH CODE ABOVE THIS LINE ***************/
-function GalleryImage(location, description, date, img) {
+function GalleryImage(location, description, date, url) {
 	//implement me as an object to hold the following data about an image:
 	//1. location where photo was taken
 	//2. description of photo
@@ -40,7 +40,7 @@ function GalleryImage(location, description, date, img) {
 	this.location = new location;
 	this.description = new description;
 	this.date = new date;
-	this.img = new img;
+	this.url = new url;
 }
 function swapPhoto() {
 	//Add code here to access the #slideShow element.
@@ -65,6 +65,13 @@ var mCurrentIndex = 0;
 
 // XMLHttpRequest variable
 var mRequest = new XMLHttpRequest();
+
+// Array holding GalleryImage objects (see below).
+var mImages = [];
+
+// Holds the retrived JSON information
+var mJson = "";
+
 var mURL = "images.json";
 var $_GET = getQueryParams(document.location.search);
 
@@ -77,23 +84,21 @@ var $_GET = getQueryParams(document.location.search);
 mRequest.onreadystatechange = function() {
       if (mRequest.readyState == 4 && mRequest.status == 200) {
           try {
-               
-               mJson = JSON.parse(mRequest.responseText);
-               
-               console.log(mJson);
-          } catch(err) {
-               console.log(err.message);
-} 
-}
+               	// Let’s try and see if we can parse JSON
+		mJson = JSON.parse(mRequest.responseText);
+		
+		} catch(err) {
+		console.log("this is the error" + err.message)
+		}
+	}
 };
 mRequest.open("GET",mURL, true);
+
 mRequest.send();
 
-// Array holding GalleryImage objects (see below).
-var mImages = [];
 
-// Holds the retrived JSON information
-var mJson = "";
+
+
 
 // URL for the JSON to load by default
 // Some options for you are: images.json, images.short.json; you will need to create your own extra.json later
@@ -121,37 +126,22 @@ $(document).ready( function() {
 	
 	// This initially hides the photos' metadata information
 	$('.details').eq(0).hide();
-	
-});
 
-window.addEventListener('load', function() {
-	
-	console.log('window loaded');
-	
-	if(mJson.images == undefined){
-		alert("The JSON file is invalid,  Default Gallery will play");
-		window.location.href = "index.html?json=images.json" ;
-	}
-	mJson.images.forEach( function (image)
-		{
-			mImages.push(new GalleryImage(image.imgLocation, image.description, image.date, image.imgPath));
-		});
+	$('.moreIndicator').click(function(){
+		//alert("hola");
+		if($( this ).hasClass('rot90')){
+			$( this ).removeClass('rot90');
+			$( this ).addClass('rot270');
+			$('.details').eq(0).show();	
+		}else{
+			$( this ).removeClass('rot270');
+			$( this ).addClass('rot90');
+			$('.details').eq(0).hide();	
+		}
 
-}, false);
-
-
-$('.moreIndicator').click(function(){
-	if (this.hasClass("rot90")){
-		this.add("rot270").remove("rot90");}
-	else if (this.hasClass("rot270"){
-		this.add("rot90").remove("rot270");}
-	else{}
-	$('div.details').fadeToggle("fast", function(){
-		$('.moreIndicator').slideUp();
 	});
-	
-	});
-		$('#nextPhoto').click(function(){
+
+	$('#nextPhoto').click(function(){
 		
 		mLastFrameTime = new Date().getTime();
 		mCurrentIndex = mCurrentIndex + 1;
@@ -174,7 +164,8 @@ $('.moreIndicator').click(function(){
 
 
 	});
-		$('#prevPhoto').click(function(){
+
+	$('#prevPhoto').click(function(){
 		mLastFrameTime = new Date().getTime();
 		mCurrentIndex = mCurrentIndex - 1;
 		//alert("testing");
@@ -198,6 +189,23 @@ $('.moreIndicator').click(function(){
 	});
 	
 });
+
+window.addEventListener('load', function() {
+	
+	console.log('window loaded');
+	
+	if(mJson.images == undefined){
+		alert("The JSON file is invalid,  Default Gallery will play");
+		window.location.href = "index.html?json=images.json" ;
+	}
+	mJson.images.forEach( function (image)
+		{
+			mImages.push(new GalleryImage(image.imgLocation, image.description, image.date, image.imgPath));
+		});
+
+}, false);
+
+
 function getQueryParams(qs) {
  qs = qs.split("+").join(" ");
  var params = {},
