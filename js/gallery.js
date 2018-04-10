@@ -83,7 +83,8 @@ mRequest.onreadystatechange = function() {
                console.log(mJson);
           } catch(err) {
                console.log(err.message);
-} }
+} 
+}
 };
 mRequest.open("GET",mURL, true);
 mRequest.send();
@@ -126,6 +127,15 @@ $(document).ready( function() {
 window.addEventListener('load', function() {
 	
 	console.log('window loaded');
+	
+	if(mJson.images == undefined){
+		alert("The JSON file is invalid,  Default Gallery will play");
+		window.location.href = "index.html?json=images.json" ;
+	}
+	mJson.images.forEach( function (image)
+		{
+			mImages.push(new GalleryImage(image.imgLocation, image.description, image.date, image.imgPath));
+		});
 
 }, false);
 
@@ -188,3 +198,14 @@ $('.moreIndicator').click(function(){
 	});
 	
 });
+function getQueryParams(qs) {
+ qs = qs.split("+").join(" ");
+ var params = {},
+ tokens,
+ re = /[?&]?([^=]+)=([^&]*)/g;
+ while (tokens = re.exec(qs)) {
+ params[decodeURIComponent(tokens[1])]
+ = decodeURIComponent(tokens[2]);
+ }
+ return params;
+}
