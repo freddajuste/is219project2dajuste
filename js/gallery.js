@@ -66,6 +66,14 @@ var mCurrentIndex = 0;
 // XMLHttpRequest variable
 var mRequest = new XMLHttpRequest();
 var mURL = "images.json";
+var $_GET = getQueryParams(document.location.search);
+
+	if($_GET["json"] === undefined){
+		console.log("No extra Json");
+	}else{
+	
+	mUrl = $_GET["json"];
+	}
 mRequest.onreadystatechange = function() {
       if (mRequest.readyState == 4 && mRequest.status == 200) {
           try {
